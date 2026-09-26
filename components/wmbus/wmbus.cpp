@@ -30,6 +30,12 @@ namespace wmbus {
     return;
   }
 
+  static std::string ip_to_string(const network::IPAddress &ip) {
+    char buf[network::IP_ADDRESS_BUFFER_SIZE];
+    ip.str_to(buf);
+    return std::string(buf);
+  }
+
   void WMBusComponent::setup() {
     this->high_freq_.start();
     if (this->led_pin_ != nullptr) {
