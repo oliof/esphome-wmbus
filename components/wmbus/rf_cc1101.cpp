@@ -22,17 +22,31 @@ namespace wmbus {
 
     ELECHOUSE_cc1101.setSpiPin(clk, miso, mosi, cs);
 
-    ESP_LOGD(TAG, "Starting manual CC1101 Reset...");
-    
-    digitalWrite(cs, LOW);
-    delayMicroseconds(10);
+        ELECHOUSE_cc1101.setSpiPin(clk, miso, mosi, cs);
+
+    ESP_LOGD(TAG, "SPI pins: SCK=%u MISO=%u MOSI=%u CS=%u",
+             clk, miso, mosi, cs);
+
+    SPI.begin(clk, miso, mosi, cs);
     digitalWrite(cs, HIGH);
-    delayMicroseconds(40);
+    delay(10);
+
+    ESP_LOGD(TAG, "Before select: CS=%d MISO=%d",
+             digitalRead(cs), digitalRead(miso));
+
     digitalWrite(cs, LOW);
+    delayMicroseconds(100);
+
+    ESP_LOGD(TAG, "After select: CS=%d MISO=%d",
+             digitalRead(cs), digitalRead(miso));
+
+    if (digitalRead(miso) != LOW) {
+      digitalWrite(cs, HIGH);
+      ESP_LOGE(TAG, "CC1101 MISO remains HIGH with CS LOW; aborting init");
+      return false;
+    }
 
     digitalWrite(cs, HIGH);
-
-    ESP_LOGD(TAG, "Configuring registers...");
     
     ELECHOUSE_cc1101.SpiWriteReg(CC1101_FSCTRL1,  0x06);
     
