@@ -43,6 +43,28 @@ namespace wmbus {
     // Board-Power wurde in ESPHome on_boot eingeschaltet;
     // dem Funkchip vor dem SPI-Test Zeit zum Anlaufen geben.
     delay(50);
+        // Alle weiteren Teilnehmer auf dem gemeinsamen SPI-Bus deaktivieren.
+    // T-Embed CC1101 Plus Pinmap:
+    // LCD_CS = GPIO41, SD_CS = GPIO13,
+    // nRF24L01_CS = GPIO44, nRF24L01_CE = GPIO43.
+    pinMode(41, OUTPUT);
+    digitalWrite(41, HIGH);  // LCD abwählen
+
+    pinMode(13, OUTPUT);
+    digitalWrite(13, HIGH);  // SD-Karte abwählen
+
+    pinMode(44, OUTPUT);
+    digitalWrite(44, HIGH);  // nRF24L01 über CS abwählen
+
+    pinMode(43, OUTPUT);
+    digitalWrite(43, LOW);   // nRF24L01 sicher nicht aktivieren
+
+    digitalWrite(cs, HIGH);  // CC1101 zunächst abwählen
+    delay(50);
+
+    SPI.begin(clk, miso, mosi, cs);
+    digitalWrite(cs, HIGH);
+    delay(10);
     SPI.begin(clk, miso, mosi, cs);
     digitalWrite(cs, HIGH);
     delay(10);
