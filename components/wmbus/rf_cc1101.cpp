@@ -27,7 +27,22 @@ namespace wmbus {
 
     ESP_LOGD(TAG, "SPI pins: SCK=%u MISO=%u MOSI=%u CS=%u",
              clk, miso, mosi, cs);
+      // Andere Teilnehmer am gemeinsamen SPI-Bus abwählen.
+    pinMode(41, OUTPUT);  // Display CS
+    digitalWrite(41, HIGH);
 
+    pinMode(13, OUTPUT);  // SD-Karte CS
+    digitalWrite(13, HIGH);
+
+    pinMode(44, OUTPUT);  // optionales nRF24-Modul CS
+    digitalWrite(44, HIGH);
+
+    // CC1101 zunächst ebenfalls abwählen.
+    digitalWrite(cs, HIGH);
+
+    // Board-Power wurde in ESPHome on_boot eingeschaltet;
+    // dem Funkchip vor dem SPI-Test Zeit zum Anlaufen geben.
+    delay(50);
     SPI.begin(clk, miso, mosi, cs);
     digitalWrite(cs, HIGH);
     delay(10);
