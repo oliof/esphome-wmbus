@@ -416,6 +416,10 @@ namespace wmbus {
   }
 
   void WMBusComponent::dump_config() {
+    if (this->is_failed()) {
+      ESP_LOGE(TAG, "Skipping WMBus dump_config: RF initialization failed");
+      return;
+    }
     ESP_LOGCONFIG(TAG, "wM-Bus v%s-%s:", MY_VERSION, WMBUSMETERS_VERSION);
     if (this->clients_.size() > 0) {
       ESP_LOGCONFIG(TAG, "  Clients:");
