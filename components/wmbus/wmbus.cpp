@@ -455,7 +455,9 @@ namespace wmbus {
     for (DriverInfo* p : allDrivers()) {
       drivers += p->name().str() + ", ";
     }
-    drivers.erase(drivers.size() - 2);
+    if (drivers.size() >= 2) {
+      drivers.erase(drivers.size() - 2);
+    }
     ESP_LOGCONFIG(TAG, "  Available drivers: %s", drivers.c_str());
     for (const auto &ele : this->wmbus_listeners_) {
       ele.second->dump_config();
