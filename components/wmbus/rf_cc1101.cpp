@@ -1,4 +1,5 @@
 #include "rf_cc1101.h"
+#include <SPI.h>
 
 namespace esphome {
 namespace wmbus {
